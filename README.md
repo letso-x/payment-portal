@@ -1,16 +1,106 @@
-# React + Vite
+# Payment Portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Tech Stack
 
-Currently, two official plugins are available:
+This project is built using a modern frontend-focused architecture with cloud-based backend services.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Frontend
+- **React** – Component-based UI development  
+- **Vite** – Fast build tool and development server  
+- **JavaScript (ES6+)** – Core programming language  
+- **HTML5 & CSS3** – Structure and styling  
 
-## React Compiler
+### Backend & Cloud Services
+- **Firebase**
+  - Hosting (deployment)  
+  - Authentication  
+  - Firestore  
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Project Structure
+- **CustomerApp/** – Customer-facing application  
+- **EmployeeApp/** – Employee-facing application  
 
-## Expanding the ESLint configuration
+### Tooling & DevOps
+- **ESLint** – Code linting and quality enforcement  
+- **SonarQube** – Code quality and security analysis  
+- **GitHub Actions** – CI/CD workflows  
+- **npm** – Package management  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Project Overview
+This application is a payment portal system with separate interfaces for customers and employees. It allows users to manage and process transactions securely.  
+
+The system includes:
+- User registration and login  
+- A simulated international payment form  
+
+The main focus of the project is **security implementation and understanding**, rather than UI design.
+
+---
+
+## Security Features
+
+The application was designed with security as a priority, implementing the following:
+
+### Password Security
+- Firebase Authentication is used to securely manage user credentials  
+- Passwords are hashed and salted automatically by Firebase  
+
+### Input Validation (Whitelisting)
+- All user inputs are validated using strict rules (whitelisting)  
+- Fields validated include:
+  - Email  
+  - Name  
+  - Payment amount  
+  - Account / IBAN  
+- Invalid or malicious input is rejected before processing  
+
+### HTTPS / Secure Communication
+- The application is deployed using Firebase Hosting  
+- All communication is secured over **HTTPS (SSL encryption)**  
+
+### Protection Against Common Attacks
+The system is protected against common web vulnerabilities through a combination of platform features and validation:
+
+- **Brute Force Attacks**  
+  - Mitigated by Firebase Authentication rate limiting and secure login handling  
+
+- **Cross-Site Scripting (XSS)**  
+  - Prevented through input validation and React’s built-in escaping  
+
+- **Injection Attacks**  
+  - Prevented by strict input validation and use of managed backend services  
+
+- **Session Hijacking**  
+  - Protected via secure Firebase session management  
+
+- **Man-in-the-Middle Attacks**  
+  - Prevented through enforced HTTPS encryption  
+
+### CI/CD and DevSecOps
+- GitHub Actions is used to automate builds and checks on code push  
+- This helps detect issues early and maintain code quality and security  
+
+---
+
+## Setup Instructions
+1. Install dependencies:
+   npm install
+   
+3. Run the development server:
+   npm run dev
+
+---
+
+## AI Usage
+Google Gemini was used to assist with code generation and debugging. All generated code was reviewed, tested, and adapted to meet the project requirements.
+
+---
+
+## Team Members
+- **ST10364883** – Kukhanya Dlanjwa  
+- **ST10530827** – Tshireletso Seqeta  
+- **ST10533342** – Akiraho Ravhura  
+- **ST10530868** – Karabo Promise Khoza  
+- **ST10355256** – Halalisile Mzobe  
