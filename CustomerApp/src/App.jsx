@@ -295,7 +295,7 @@ function App() {
 
               <div style={styles.formGroup}>
                 <label style={styles.label}>Payee Account Information</label>
-                <input name="payeeAccount" style={styles.input} placeholder="Account Number or IBAN" onChange={(e) => setPayeeAccount(sanitizeInput(e.target.value))} onBlur={handleBlur} autoComplete="off"/>
+                <input name="payeeAccount" style={styles.input} placeholder="Account Number or IBAN" value={payeeAccount} onChange={(e) => setPayeeAccount(sanitizeInput(e.target.value))} onBlur={handleBlur} autoComplete="new-password"/>
                 {errors.payeeAccount && <div style={styles.errorText}>{errors.payeeAccount}</div>}
               </div>
 
