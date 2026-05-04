@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "payment-portal-3c5bc", 
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
