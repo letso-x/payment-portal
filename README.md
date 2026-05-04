@@ -1,5 +1,7 @@
 # Payment Portal
-Live Link: https://payment-portal-3c5bc.web.app/
+
+## Live Link
+https://payment-portal-3c5bc.web.app/
 ## Demo Video
 Watch our demostration here:
 https://youtu.be/ZomzcVdCwvo
@@ -81,9 +83,18 @@ The system is protected against common web vulnerabilities through a combination
 - **Man-in-the-Middle Attacks**  
   - Prevented through enforced HTTPS encryption  
 
-### CI/CD and DevSecOps
-- GitHub Actions is used to automate builds and checks on code push  
-- This helps detect issues early and maintain code quality and security  
+These protections reflect real-world secure development practices and align with OWASP guidelines.
+
+---
+
+## DevSecOps & CI/CD
+- GitHub Actions is used to automate build and validation processes  
+- SonarQube is integrated for:
+  - Vulnerability detection  
+  - Code quality checks  
+  - Security hotspot identification  
+
+This ensures continuous monitoring and improves overall application security.
 
 ---
 
