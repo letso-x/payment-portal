@@ -295,13 +295,13 @@ function App() {
 
               <div style={styles.formGroup}>
                 <label style={styles.label}>Payee Account Information</label>
-                <input name="payeeAccount" style={styles.input} placeholder="Account Number or IBAN" onChange={(e) => setPayeeAccount(sanitizeInput(e.target.value))} onBlur={handleBlur} />
+                <input name="payeeAccount" style={styles.input} placeholder="Account Number or IBAN" onChange={(e) => setPayeeAccount(sanitizeInput(e.target.value))} onBlur={handleBlur} autoComplete="off"/>
                 {errors.payeeAccount && <div style={styles.errorText}>{errors.payeeAccount}</div>}
               </div>
 
               <div style={styles.formGroup}>
                 <label style={styles.label}>SWIFT Code</label>
-                <input name="swift" style={styles.input} placeholder="8 or 11 characters" onChange={(e) => setSwift(sanitizeInput(e.target.value))} onBlur={handleBlur} />
+                <input name="swift" style={styles.input} placeholder="8 or 11 characters" onChange={(e) => setSwift(sanitizeInput(e.target.value))} onBlur={handleBlur}  />
                 {errors.swift && <div style={styles.errorText}>{errors.swift}</div>}
               </div>
 
