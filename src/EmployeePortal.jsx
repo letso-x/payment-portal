@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { auth, db } from "./firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { collection, getDocs, doc, updateDoc, query, where } from "firebase/firestore";
 import DOMPurify from "dompurify";
 
@@ -30,10 +30,18 @@ const styles = {
   errorText: { color: "#d93025", fontSize: "12px", marginTop: "5px", fontWeight: "500" }
 };
 
+const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 function EmployeePortal() {
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [lockoutUntil, setLockoutUntil] = useState(null);
+  const [lastActivity, setLastActivity] = useState(Date.now());
   
   // Dashboard State
   const [transactions, setTransactions] = useState([]);
@@ -41,8 +49,63 @@ function EmployeePortal() {
 
   const sanitizeInput = (value) => DOMPurify.sanitize(value);
 
+  const logout = useCallback(async () => {
+    await signOut(auth);
+    setUser(null);
+    setTransactions([]);
+  }, []);
+
+  useEffect(() => {
+    const updateActivity = () => setLastActivity(Date.now());
+
+    window.addEventListener("mousemove", updateActivity);
+    window.addEventListener("keydown", updateActivity);
+    window.addEventListener("click", updateActivity);
+
+    return () => {
+      window.removeEventListener("mousemove", updateActivity);
+      window.removeEventListener("keydown", updateActivity);
+      window.removeEventListener("click", updateActivity);
+    };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (user && Date.now() - lastActivity > 30 * 60 * 1000) {
+        logout();
+        alert("Session expired due to inactivity.");
+      }
+    }, 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, [user, lastActivity, logout]);
+
   // Strict Login Function - No Registration Pathway Exists
   const handleLogin = async () => {
+    if (Date.now() < lockoutUntil) {
+      const remainingMinutes = Math.ceil((lockoutUntil - Date.now()) / (60 * 1000));
+      setPasswordError(`Account locked. Try again in ${remainingMinutes} minute(s).`);
+      return;
+    }
+
+    let hasValidationError = false;
+    setEmailError("");
+    setPasswordError("");
+
+    if (!emailRegex.test(email)) {
+      setEmailError("Enter a valid email address.");
+      hasValidationError = true;
+    }
+
+    if (!passwordRegex.test(password)) {
+      setPasswordError("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
+      hasValidationError = true;
+    }
+
+    if (hasValidationError) {
+      return;
+    }
+
     if (!email || !password) {
         alert("Credentials required.");
         return;
@@ -50,8 +113,20 @@ function EmployeePortal() {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       setUser(result.user);
+      setLoginAttempts(0);
+      setLockoutUntil(null);
       fetchPendingTransactions();
-    } catch (err) {
+    } catch {
+      const nextAttempts = loginAttempts + 1;
+
+      if (nextAttempts >= 5) {
+        setLockoutUntil(Date.now() + 15 * 60 * 1000);
+        setLoginAttempts(0);
+        setPasswordError("Account locked. Try again in 15 minute(s).");
+      } else {
+        setLoginAttempts(nextAttempts);
+      }
+
       alert("Unauthorized Access. Credentials failed.");
     }
   };
@@ -99,11 +174,6 @@ function EmployeePortal() {
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    setTransactions([]);
-  };
-
   return (
     <div style={styles.appLayout}>
       <nav style={styles.navbar}>
@@ -124,12 +194,14 @@ function EmployeePortal() {
             
             <div style={styles.formGroup}>
                 <label style={styles.label}>Staff Email</label>
-                <input style={styles.input} placeholder="agent@globalsecure.com" onChange={(e) => setEmail(sanitizeInput(e.target.value))} />
+                <input style={styles.input} placeholder="agent@globalsecure.com" onChange={(e) => { setEmail(sanitizeInput(e.target.value)); setEmailError(""); }} />
+                <p style={styles.errorText}>{emailError}</p>
             </div>
 
             <div style={styles.formGroup}>
                 <label style={styles.label}>System Password</label>
-                <input style={styles.input} type="password" placeholder="••••••••" onChange={(e) => setPassword(sanitizeInput(e.target.value))} />
+                <input style={styles.input} type="password" placeholder="••••••••" onChange={(e) => { setPassword(sanitizeInput(e.target.value)); setPasswordError(""); }} />
+                <p style={styles.errorText}>{passwordError}</p>
             </div>
             
             <button style={styles.button} onClick={handleLogin}>Authenticate</button>
