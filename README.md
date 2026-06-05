@@ -1,8 +1,8 @@
 # Payment Portal
 
 ## Live Link
-Customer Portal: https://payment-portal-3c5bc.web.app/
-Employee Portal: https://paymentportal-internal.web.app/
+- Customer Portal: https://payment-portal-3c5bc.web.app/
+- Employee Portal: https://paymentportal-internal.web.app/
 ## Demo Video
 Watch our demostration here:
 https://youtu.be/ZomzcVdCwvo
