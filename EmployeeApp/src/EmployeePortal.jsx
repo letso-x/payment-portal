@@ -31,7 +31,7 @@ const styles = {
 };
 
 const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const passwordRegex = /^(?![\s\S]*['"`;\\])^[\s\S]{8,128}$/;
 
 function EmployeePortal() {
   const [user, setUser] = useState(null);
@@ -98,7 +98,7 @@ function EmployeePortal() {
     }
 
     if (!passwordRegex.test(password)) {
-      setPasswordError("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
+      setPasswordError("Incorrect email or password. Please try again. Account will be locked after 5 failed attempts");
       hasValidationError = true;
     }
 
